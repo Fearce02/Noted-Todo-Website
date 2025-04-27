@@ -8,7 +8,7 @@ function Landingpage() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   return (
     <>
-      <section className="pt-32 pb-20 md:pb-32 overflow-hidden">
+      <section className="pt-32 pb-20 md:pb-32 overflow-hidden my-20">
         <div className="container mx-auto px-4 md:px-8">
           <div className="flex flex-col md:flex-row items-center">
             <div className="md:w-1/2 md:pr-12 mb-12 md:mb-0">
