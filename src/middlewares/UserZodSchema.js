@@ -14,7 +14,8 @@ const SigninUser = z.object({
 const UpdateUser = z.object({
   firstname: z.string().min(1).optional(),
   lastname: z.string().min(1).optional(),
-  username: z.string.min(5).optional(),
+  username: z.string().min(5).optional(),
+  password: z.string().min(8).optional(),
 });
 
 export { CreateUser, SigninUser, UpdateUser };
