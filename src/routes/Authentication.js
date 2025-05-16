@@ -1,7 +1,7 @@
 import express from "express";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import User from "../models/User.js";
+import User from "../models/userSchema.js";
 import {
   CreateUser,
   UpdateUser,
@@ -40,7 +40,7 @@ router.post("/signin", Validate(SigninUser), async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const user = findOne({ email });
+    const user = await User.findOne({ email });
     if (!user) {
       res.status(400).json({
         message: "Invalid Credentials please try again",
@@ -58,10 +58,11 @@ router.post("/signin", Validate(SigninUser), async (req, res) => {
       expiresIn: "2h",
     });
     res.json({
-      token,
+      token: jwtToken,
       userId: user._id,
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({
       message: "Internal Server Error",
     });

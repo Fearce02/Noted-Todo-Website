@@ -1,8 +1,8 @@
 import express from "express";
-import authenticate from "../middlewares/jwtAuth";
-import { createTodo, updateTodo } from "../middlewares/TodoZodSchema";
-import { Todo } from "../models/TodoSchema";
-import { Validate } from "../middlewares/Validate";
+import authenticate from "../middlewares/jwtAuth.js";
+import { createTodo, updateTodo } from "../middlewares/TodoZodSchema.js";
+import { Todo } from "../models/TodoSchema.js";
+import { Validate } from "../middlewares/Validate.js";
 
 const router = express.Router();
 
@@ -45,3 +45,51 @@ router.get("/listallTodos", authenticate, async (req, res) => {
     });
   }
 });
+
+router.put(
+  "/updateTodo",
+  authenticate,
+  Validate(updateTodo),
+  async (req, res) => {
+    try {
+      const todo = await Todo.findOne({
+        _id: req.params.id,
+        userId: req.user.id,
+      });
+
+      if (!todo)
+        return res.status(400).json({
+          message: "Todo not found",
+        });
+
+      const updatedFields = req.body;
+      Object.assign(todo, updatedFields);
+
+      const updatedTodo = await todo.save();
+      res.status(200).json({
+        message: "Todo updated successfully",
+        updateTodo,
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Error updating todo", error });
+    }
+  }
+);
+
+router.delete("/deleteTodo:id", authenticate, async (req, res) => {
+  try {
+    const deletedTodo = await Todo.findOneAndDelete({
+      _id: req.params.id,
+      userId: req.user.id,
+    });
+
+    if (!deletedTodo)
+      return res.status(404).json({ message: "Todo not found" });
+
+    res.status(200).json({ message: "Todo deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting todo", error });
+  }
+});
+
+export default router;
