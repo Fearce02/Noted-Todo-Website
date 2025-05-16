@@ -6,3 +6,5 @@ const Validate = (schema) => {
     return res.status(400).json({ errors: error.errors });
   }
 };
+
+export { Validate };
