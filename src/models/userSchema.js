@@ -16,15 +16,22 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    info: {
+      firstname: {
+        type: String,
+      },
+      lastname: {
+        type: String,
+      },
+    },
     todos: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Todo",
-        required: true,
       },
     ],
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("User", userSchema);
+export const User = mongoose.model("User", userSchema);
