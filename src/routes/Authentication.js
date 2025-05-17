@@ -42,14 +42,14 @@ router.post("/signin", Validate(SigninUser), async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      res.status(400).json({
+      return res.status(400).json({
         message: "Invalid Credentials please try again",
       });
     }
 
     const userMatches = await bcrypt.compare(password, user.password);
     if (!userMatches) {
-      res.status(400).json({
+      return res.status(400).json({
         message: "Invalid Credentials please try again",
       });
     }
@@ -74,14 +74,14 @@ router.put(
   authenticate,
   Validate(UpdateUser),
   async (req, res) => {
-    const { username, password, firstname, lastname } = req.body;
+    const { username, password, firstName, lastName } = req.body;
 
     try {
       const updates = {};
 
       if (username) updates.username = username;
-      if (firstname) updates["info.firstname"] = firstname;
-      if (lastname) updates["info.lastname"] = lastname;
+      if (firstName) updates["info.firstname"] = firstname;
+      if (lastName) updates["info.lastname"] = lastname;
       if (password) {
         const hashedPwd = await bcrypt.hash(password, 15);
         updates.password = hashedPwd;

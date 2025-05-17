@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { X, Mail, Lock } from "lucide-react";
 import Button from "./Button";
 
+const baseAPI = "http://localhost:5000";
+
 function LoginPopup({ isOpen, onClose }) {
   const [login, setIslogin] = useState(false);
   const [email, setEmail] = useState("");
@@ -9,9 +11,37 @@ function LoginPopup({ isOpen, onClose }) {
 
   if (!isOpen) return null;
 
-  const handlesubmission = (e) => {
+  const handlesubmission = async (e) => {
     e.preventDefault();
-    console.log("Form Submitted", { email, password });
+
+    const endpoint = login ? "/auth/signin" : "/auth/signup";
+    try {
+      const response = await fetch(`${baseAPI}${endpoint}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.message || "Authentication failed.");
+        return;
+      }
+      if (login) {
+        localStorage.setItem("token", data.token);
+        alert("Signed in successfully!");
+        onClose();
+      } else {
+        alert("Account created Successfully! Please sign in.");
+        setIslogin(true);
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Something went Wrong. Please try again");
+    }
   };
 
   return (
