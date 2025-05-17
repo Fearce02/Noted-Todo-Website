@@ -1,8 +1,10 @@
 import axios from "axios";
+import { useState } from "react";
 
 const baseAPI = "http://localhost:5000";
 
 function CompleteProfile({ user, onProfileCompletion }) {
+  const [username, setUserName] = useState(user.username || "");
   const [firstName, setFirstName] = useState(user.firstName || "");
   const [lastName, setLastName] = useState(user.lastName || "");
   const [loading, setLoading] = useState(false);
@@ -21,8 +23,9 @@ function CompleteProfile({ user, onProfileCompletion }) {
       const response = await axios.patch(
         `${baseAPI}/auth/updateUser`,
         {
-          firstName,
-          lastName,
+          username: username.trim(),
+          firstName: firstName.trim(),
+          lastName: lastName.trim(),
         },
         {
           headers: {
@@ -48,6 +51,19 @@ function CompleteProfile({ user, onProfileCompletion }) {
         <h2 className="text-2xl font-semibold mb-4">Complete Your Profile</h2>
         <form onSubmit={handleSubmission} className="space-y-4">
           {error && <p className="text-red-600">{error}</p>}
+
+          <div>
+            <label className="block mb-1 text-sm font-medium">Username</label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUserName(e.target.value)}
+              required
+              disabled={loading}
+              className="w-full border border-gray-300 px-3 py-2 rounded"
+            />
+          </div>
+
           <div>
             <label className="block mb-1 text-sm font-medium">First Name</label>
             <input
@@ -59,6 +75,7 @@ function CompleteProfile({ user, onProfileCompletion }) {
               className="w-full border border-gray-300 px-3 py-2 rounded"
             />
           </div>
+
           <div>
             <label className="block mb-1 text-sm font-medium">Last Name</label>
             <input
@@ -70,6 +87,7 @@ function CompleteProfile({ user, onProfileCompletion }) {
               className="w-full border border-gray-300 px-3 py-2 rounded"
             />
           </div>
+
           <button
             type="submit"
             disabled={loading}
