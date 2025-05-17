@@ -13,7 +13,7 @@ import authenticate from "../middlewares/jwtAuth.js";
 const router = express.Router();
 
 router.post("/signup", Validate(CreateUser), async (req, res) => {
-  const { username, email, password } = req.body;
+  const { email, password } = req.body;
 
   try {
     const userexists = await User.findOne({ email });
@@ -24,12 +24,13 @@ router.post("/signup", Validate(CreateUser), async (req, res) => {
     }
 
     const pwdHashing = await bcrypt.hash(password, 15);
-    const newUser = new User({ username, email, password: pwdHashing });
+    const newUser = new User({ email, password: pwdHashing });
     await newUser.save();
     res.status(200).json({
       message: " User created Successfully!",
     });
   } catch (error) {
+    console.log(error);
     res.status(500).json({
       message: "Internal Server Error",
     });
@@ -76,12 +77,20 @@ router.put(
   async (req, res) => {
     const { username, password, firstName, lastName } = req.body;
 
+    if (username) {
+      const existingUser = await User.findOne({ username: username.trim() });
+
+      if (existingUser && existingUser._id.toString() !== req.user.id) {
+        return res.status(409).json({ message: "Username is already taken." });
+      }
+    }
+
     try {
       const updates = {};
 
       if (username) updates.username = username;
-      if (firstName) updates["info.firstname"] = firstname;
-      if (lastName) updates["info.lastname"] = lastname;
+      if (firstName) updates["info.firstname"] = firstName;
+      if (lastName) updates["info.lastname"] = lastName;
       if (password) {
         const hashedPwd = await bcrypt.hash(password, 15);
         updates.password = hashedPwd;
