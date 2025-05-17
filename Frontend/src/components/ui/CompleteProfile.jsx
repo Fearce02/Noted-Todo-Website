@@ -1,3 +1,4 @@
+import React from "react";
 import axios from "axios";
 import { useState } from "react";
 
@@ -20,7 +21,7 @@ function CompleteProfile({ user, onProfileCompletion }) {
       if (!jwttoken)
         throw new Error("User not signed in please sign in to Continue");
 
-      const response = await axios.patch(
+      const response = await axios.put(
         `${baseAPI}/auth/updateUser`,
         {
           username: username.trim(),
@@ -33,8 +34,9 @@ function CompleteProfile({ user, onProfileCompletion }) {
           },
         }
       );
+      alert("Profile updated successfully");
       console.log("Profile Updated Succesfully");
-      onProfileCompletion(response.data.updatedUser || null);
+      onProfileCompletion(response.data.user || null);
     } catch (err) {
       console.error(err);
       setError(

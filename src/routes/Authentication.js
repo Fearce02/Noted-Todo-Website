@@ -70,6 +70,22 @@ router.post("/signin", Validate(SigninUser), async (req, res) => {
   }
 });
 
+router.get("/me", authenticate, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const userObj = user.toObject();
+    userObj.firstName = user.info?.firstname || "";
+    userObj.lastName = user.info?.lastname || "";
+
+    res.json({ user: userObj });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 router.put(
   "/updateUser",
   authenticate,
