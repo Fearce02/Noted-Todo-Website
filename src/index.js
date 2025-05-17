@@ -10,10 +10,12 @@ dotenv.config({
 
 const app = express();
 app.use(express.json());
-console.log(process.env.MONGODB_URI);
 dbconnect();
 
-app.get("/eg", () => {
+app.get("/test", (req, res) => {
+  res.json({
+    message: "API IS WORKING",
+  });
   console.log("API IS WORKING");
 });
 app.use("/auth", authRoutes);

@@ -6,26 +6,34 @@ import { Validate } from "../middlewares/Validate.js";
 
 const router = express.Router();
 
-router.post("/createTodos", Validate(createTodo), async (req, res) => {
-  try {
-    const newTodo = new Todo({
-      userId: req.user.id,
-      title: req.body,
-      description: req.body.description,
-    });
+router.post(
+  "/createTodos",
+  authenticate,
+  Validate(createTodo),
+  async (req, res) => {
+    try {
+      const { title, description } = req.body;
+      const newTodo = new Todo({
+        userId: req.user.id,
+        title,
+        description,
+      });
 
-    const saveTodo = newTodo.save();
-    res.status(200).json({
-      message: "Todo Created!",
-      saveTodo,
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: "Problem Creating a todo",
-      error,
-    });
+      const saveTodo = newTodo.save();
+      res.status(200).json({
+        message: "Todo Created!",
+        saveTodo,
+      });
+    } catch (error) {
+      res.status(500).json(
+        {
+          message: "Problem Creating a todo",
+        },
+        console.error(error)
+      );
+    }
   }
-});
+);
 
 router.get("/listallTodos", authenticate, async (req, res) => {
   try {
@@ -47,7 +55,7 @@ router.get("/listallTodos", authenticate, async (req, res) => {
 });
 
 router.put(
-  "/updateTodo",
+  "/updateTodo/:id",
   authenticate,
   Validate(updateTodo),
   async (req, res) => {
@@ -76,7 +84,7 @@ router.put(
   }
 );
 
-router.delete("/deleteTodo:id", authenticate, async (req, res) => {
+router.delete("/deleteTodo/:id", authenticate, async (req, res) => {
   try {
     const deletedTodo = await Todo.findOneAndDelete({
       _id: req.params.id,

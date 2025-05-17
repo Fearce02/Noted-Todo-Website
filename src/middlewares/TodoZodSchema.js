@@ -6,7 +6,6 @@ const createTodo = z.object({
 });
 
 const updateTodo = z.object({
-  id: z.string(),
   title: z.string().min(1).optional(),
   description: z.string().min(1).optional(),
   isCompleted: z.boolean().optional(),
