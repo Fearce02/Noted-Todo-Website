@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Plus,
   Loader,
@@ -9,8 +9,13 @@ import {
   Check,
 } from "lucide-react";
 import Button from "./ui/Button";
+import { useSelector } from "react-redux";
 
-const TodoList = ({ user }) => {
+const baseAPI = "3000";
+
+const TodoList = () => {
+  const { token } = useSelector((state) => state.user);
+
   const [todos, setTodos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -23,12 +28,16 @@ const TodoList = ({ user }) => {
   }, []);
 
   const fetchTodos = async () => {
+    setLoading(true);
     try {
-      const response = await fetch("http://localhost:5000/todos/listallTodos", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      const response = await fetch(
+        `http://localhost:${baseAPI}/todos/listallTodos`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
 
       if (response.ok) {
         const data = await response.json();
@@ -47,14 +56,17 @@ const TodoList = ({ user }) => {
   const handleAddTodo = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:5000/todos/createTodos", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify(newTodo),
-      });
+      const response = await fetch(
+        `http://localhost:${baseAPI}/todos/createTodos`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(newTodo),
+        }
+      );
 
       if (response.ok) {
         await fetchTodos();
@@ -72,7 +84,7 @@ const TodoList = ({ user }) => {
   const handleUpdateTodo = async (todo) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/todos/updateTodo/${todo._id}`,
+        `http://localhost:${baseAPI}/todos/updateTodo/${todo._id}`,
         {
           method: "PUT",
           headers: {
@@ -98,7 +110,7 @@ const TodoList = ({ user }) => {
   const handleDeleteTodo = async (id) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/todos/deleteTodo/${id}`,
+        `http://localhost:${baseAPI}/todos/deleteTodo/${id}`,
         {
           method: "DELETE",
           headers: {

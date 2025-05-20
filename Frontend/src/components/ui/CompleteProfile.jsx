@@ -4,12 +4,15 @@ import { User, AtSign, UserCircle, Loader, AlertCircle } from "lucide-react";
 import Button from "./Button.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../../store/userSlice";
+import { useNavigate } from "react-router-dom";
 
 const baseAPI = "http://localhost:3000";
 
 function CompleteProfile({ onProfileCompletion }) {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     username: user.info?.username || "",
     firstName: user.info?.firstName || "",
@@ -81,7 +84,10 @@ function CompleteProfile({ onProfileCompletion }) {
         }
       );
       dispatch(setUser(response.data.user));
-      if (onProfileCompletion) onProfileCompletion(response.data.user);
+      if (onProfileCompletion) {
+        onProfileCompletion(response.data.user);
+      }
+      useNavigate("/todos");
     } catch (err) {
       console.error(err);
       setError(
@@ -123,7 +129,7 @@ function CompleteProfile({ onProfileCompletion }) {
                 <div className="relative">
                   <AtSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
                   <input
-                    name="userame"
+                    name="username"
                     type="text"
                     value={formData.username}
                     onChange={handleChange}
