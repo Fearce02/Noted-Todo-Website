@@ -11,62 +11,90 @@ import {
   useNavigate,
 } from "react-router-dom";
 import axios from "axios";
+import TodoList from "./components/TodoList";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchUser, setUser } from "./store/userSlice";
 
-const baseAPI = "http://localhost:5000";
+const baseAPI = "http://localhost:3000";
 
-function App() {
-  const [user, setUser] = useState(null);
-  const [loadingUser, setLoadingUser] = useState(true);
+const AppContent = () => {
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    const fetchUser = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        setLoadingUser(false);
-        return;
-      }
-
-      try {
-        const response = await axios.get(`${baseAPI}/auth/me`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setUser(response.data.user);
-      } catch (err) {
-        console.error("Failed to fetch user:", err);
-        localStorage.removeItem("token"); // Invalid token cleanup
-      } finally {
-        setLoadingUser(false);
-      }
-    };
-
-    fetchUser();
-  }, []);
-
-  const profileIncomplete = user && (!user.firstName || !user.lastName);
-
-  const handleProfileCompletion = (updatedUser) => {
-    setUser(updatedUser);
-  };
-  if (loadingUser) {
-    return <p className="text-center mt-20">Loading user data...</p>;
-  }
+    dispatch(fetchUser());
+  }, [dispatch]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white text-slate-900">
-      <Header></Header>
-      {user ? (
-        profileIncomplete ? (
-          <CompleteProfile
-            user={user}
-            onProfileCompletion={handleProfileCompletion}
-          />
-        ) : (
-          <Landingpage />
-        )
-      ) : (
-        <Landingpage />
-      )}
+    <Routes>
+      <Route path="/" element={<Landingpage />} />
+      <Route path="/todos" element={<TodoList />} />
+    </Routes>
+  );
+};
+
+function App() {
+  const dispatch = useDispatch();
+  const { user, loading } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    dispatch(fetchUser());
+  }, [dispatch]);
+
+  const profileIncomplete =
+    user && (!user.info?.firstname || !user.info?.lastname);
+
+  const handleProfileCompletion = (updatedUser) => {
+    dispatch(setUser(updatedUser));
+  };
+
+  if (loading) {
+    return <p className="text-center mt-20">Loading user data...</p>;
+  }
+  // const [user, setUser] = useState(null);
+  // const [loadingUser, setLoadingUser] = useState(true);
+  // useEffect(() => {
+  //   const fetchUser = async () => {
+  //     const token = localStorage.getItem("token");
+  //     if (!token) {
+  //       setLoadingUser(false);
+  //       return;
+  //     }
+
+  //     try {
+  //       const response = await axios.get(`${baseAPI}/auth/me`, {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       });
+  //       setUser(response.data.user);
+  //     } catch (err) {
+  //       console.error("Failed to fetch user:", err);
+  //       localStorage.removeItem("token"); // Invalid token cleanup
+  //     } finally {
+  //       setLoadingUser(false);
+  //     }
+  //   };
+
+  //   fetchUser();
+  // }, []);
+
+  // const profileIncomplete =
+  //   user && (!user.info?.firstname || !user.info?.lastname);
+
+  // const handleProfileCompletion = (updatedUser) => {
+  //   setUser(updatedUser);
+  // };
+  // if (loadingUser) {
+  //   return <p className="text-center mt-20">Loading user data...</p>;
+  // }
+
+  return (
+    <div>
+      <Provider store={store}>
+        <BrowserRouter>
+          <AppContent />
+        </BrowserRouter>
+      </Provider>
     </div>
   );
 }

@@ -1,10 +1,16 @@
 import React, { useState } from "react";
 import { X, Mail, Lock } from "lucide-react";
 import Button from "./Button";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { setUser } from "../../store/userSlice";
+import { useNavigate } from "react-router-dom";
 
-const baseAPI = "http://localhost:5000";
+const baseAPI = "http://localhost:3000";
 
 function LoginPopup({ isOpen, onClose }) {
+  const dispatch = useDispatch();
+
   const [login, setIslogin] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -32,6 +38,12 @@ function LoginPopup({ isOpen, onClose }) {
       }
       if (login) {
         localStorage.setItem("token", data.token);
+        const userResponse = await axios.get(`${baseAPI}/auth/me`, {
+          headers: {
+            Authorization: `Bearer ${data.token}`,
+          },
+        });
+        dispatch(setUser(userResponse.data.user));
         alert("Signed in successfully!");
         onClose();
       } else {

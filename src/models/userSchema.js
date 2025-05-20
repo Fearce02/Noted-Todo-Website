@@ -18,10 +18,10 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     info: {
-      firstname: {
+      firstName: {
         type: String,
       },
-      lastname: {
+      lastName: {
         type: String,
       },
     },
