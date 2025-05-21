@@ -16,9 +16,9 @@ function CompleteProfile({ onProfileCompletion }) {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    username: user.info?.username || "",
-    firstName: user.info?.firstName || "",
-    lastName: user.info?.lastName || "",
+    username: user.username || "",
+    firstName: user.firstName || "",
+    lastName: user.lastName || "",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -75,9 +75,9 @@ function CompleteProfile({ onProfileCompletion }) {
       const response = await axios.put(
         `${baseAPI}/auth/updateUser`,
         {
-          username: username.trim(),
-          firstName: firstName.trim(),
-          lastName: lastName.trim(),
+          username: formData.username.trim(),
+          firstname: formData.firstName.trim(),
+          lastname: formData.lastName.trim(),
         },
         {
           headers: {

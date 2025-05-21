@@ -106,8 +106,8 @@ router.put(
       const updates = {};
 
       if (username) updates.username = username;
-      if (firstName) updates["info.firstname"] = firstName;
-      if (lastName) updates["info.lastname"] = lastName;
+      if (firstName) updates.firstName = firstName;
+      if (lastName) updates.lastName = lastName;
       if (password) {
         const hashedPwd = await bcrypt.hash(password, 15);
         updates.password = hashedPwd;

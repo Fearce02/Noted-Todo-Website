@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { X, Mail, Lock } from "lucide-react";
 import Button from "./Button";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import axios from "axios";
 import { setUser } from "../../store/userSlice";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 const baseAPI = "http://localhost:3000";
 
 function LoginPopup({ isOpen, onClose }) {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [login, setIslogin] = useState(false);
@@ -44,6 +45,7 @@ function LoginPopup({ isOpen, onClose }) {
           },
         });
         dispatch(setUser(userResponse.data.user));
+        navigate("/complete-profile");
         alert("Signed in successfully!");
         onClose();
       } else {

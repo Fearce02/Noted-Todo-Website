@@ -11,9 +11,10 @@ const SigninUser = z.object({
 });
 
 const UpdateUser = z.object({
+  username: z.string().min(5).optional(),
   firstName: z.string().min(1).optional(),
   lastName: z.string().min(1).optional(),
-  username: z.string().min(5).optional(),
+
   password: z.string().min(8).optional(),
 });
 

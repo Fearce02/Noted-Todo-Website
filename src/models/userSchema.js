@@ -8,6 +8,12 @@ const userSchema = new mongoose.Schema(
       sparse: true,
       unique: true,
     },
+    firstName: {
+      type: String,
+    },
+    lastName: {
+      type: String,
+    },
     email: {
       type: String,
       required: true,
@@ -17,14 +23,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    info: {
-      firstName: {
-        type: String,
-      },
-      lastName: {
-        type: String,
-      },
-    },
+
     todos: [
       {
         type: mongoose.Schema.Types.ObjectId,
