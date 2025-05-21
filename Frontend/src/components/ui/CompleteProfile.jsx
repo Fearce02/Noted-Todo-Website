@@ -30,7 +30,7 @@ function CompleteProfile({ onProfileCompletion }) {
   }, []);
 
   const validateForm = () => {
-    const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/; // letters, numbers, underscore, 3-20 chars
+    const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
     if (
       !validateNonEmpty(formData.username) ||
       !usernameRegex.test(formData.username.trim())
@@ -76,8 +76,8 @@ function CompleteProfile({ onProfileCompletion }) {
         `${baseAPI}/auth/updateUser`,
         {
           username: formData.username.trim(),
-          firstname: formData.firstName.trim(),
-          lastname: formData.lastName.trim(),
+          firstName: formData.firstName.trim(),
+          lastName: formData.lastName.trim(),
         },
         {
           headers: {

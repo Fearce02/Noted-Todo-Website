@@ -1,3 +1,4 @@
+import React from "react";
 import { useState, useEffect } from "react";
 import {
   Plus,
@@ -62,7 +63,7 @@ const TodoList = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
           body: JSON.stringify(newTodo),
         }

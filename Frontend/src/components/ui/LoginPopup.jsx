@@ -3,7 +3,7 @@ import { X, Mail, Lock } from "lucide-react";
 import Button from "./Button";
 import { useDispatch } from "react-redux";
 import axios from "axios";
-import { setUser } from "../../store/userSlice";
+import { setUser, fetchUser } from "../../store/userSlice";
 import { useNavigate } from "react-router-dom";
 
 const baseAPI = "http://localhost:3000";
@@ -44,7 +44,7 @@ function LoginPopup({ isOpen, onClose }) {
             Authorization: `Bearer ${data.token}`,
           },
         });
-        dispatch(setUser(userResponse.data.user));
+        dispatch(setUser({ user: userResponse.data.user, token: data.token }));
         navigate("/complete-profile");
         alert("Signed in successfully!");
         onClose();

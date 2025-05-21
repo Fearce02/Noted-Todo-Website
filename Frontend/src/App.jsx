@@ -17,7 +17,8 @@ function App() {
     dispatch(fetchUser());
   }, [dispatch]);
 
-  const profileIncomplete = user && (!user.firstName || !user.lastName);
+  const profileIncomplete =
+    user && (!user.firstName || !user.lastName || !user.username);
   if (loading) {
     return <p className="text-center mt-20">Loading user data...</p>;
   }

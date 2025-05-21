@@ -40,6 +40,7 @@ const userSlice = createSlice({
   reducers: {
     setUser(state, action) {
       state.user = action.payload;
+      state.token = action.payload.token;
       state.error = null;
     },
     logout(state) {
