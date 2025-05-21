@@ -76,8 +76,9 @@ router.get("/me", authenticate, async (req, res) => {
     if (!user) return res.status(404).json({ message: "User not found" });
 
     const userObj = user.toObject();
-    userObj.firstName = user.info?.firstname || "";
-    userObj.lastName = user.info?.lastname || "";
+    userObj.firstName = user.info?.firstName || "";
+    userObj.lastName = user.info?.lastName || "";
+    userObj.username = user.username || "";
 
     res.json({ user: userObj });
   } catch (error) {

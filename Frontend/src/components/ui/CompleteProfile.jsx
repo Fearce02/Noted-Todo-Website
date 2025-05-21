@@ -9,7 +9,9 @@ import { useNavigate } from "react-router-dom";
 const baseAPI = "http://localhost:3000";
 
 function CompleteProfile({ onProfileCompletion }) {
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state) => state.user.user);
+  console.log("CompleteProfile mounted with user:", user);
+  console.log("Redux user state:", user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -87,7 +89,7 @@ function CompleteProfile({ onProfileCompletion }) {
       if (onProfileCompletion) {
         onProfileCompletion(response.data.user);
       }
-      useNavigate("/todos");
+      navigate("/todos");
     } catch (err) {
       console.error(err);
       setError(
