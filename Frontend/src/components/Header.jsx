@@ -3,11 +3,20 @@ import { Menu, X, CheckSquare2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import LoginPopup from "./ui/LoginPopup";
 import Button from "./ui/Button";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../store/userSlice";
+import { useNavigate } from "react-router-dom";
 
 function Header() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const user = useSelector((state) => state.user.user);
+
   const [isScrolled, setIsScrolled] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [loggedout, setLoggedout] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -20,6 +29,11 @@ function Header() {
     };
   }, []);
 
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/");
+  };
+
   return (
     <>
       <div
@@ -27,15 +41,20 @@ function Header() {
           isScrolled ? "bg-white py-3" : "bg-transparent py-5 "
         }`}
       >
-        <div className="container mx-auto px-4 md:px-8">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <CheckSquare2 className=" h-8 w-8 text-blue-600" />
-              <span className="text-xl font-extrabold tracking-tight ">
-                Noted
-              </span>
-            </div>
-            <nav className="hidden md:flex items-center spacce-x-8">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <CheckSquare2 className=" h-8 w-8 text-blue-600" />
+            <span className="text-xl font-extrabold tracking-tight ">
+              Noted
+            </span>
+          </div>
+
+          <nav className="hidden md:flex items-center space-x-4">
+            {user ? (
+              <Button variant="outlined" size="sm" onClick={handleLogout}>
+                Logout
+              </Button>
+            ) : (
               <Button
                 variant="primary"
                 size="sm"
@@ -43,8 +62,8 @@ function Header() {
               >
                 Log in
               </Button>
-            </nav>
-          </div>
+            )}
+          </nav>
         </div>
       </div>
       <LoginPopup isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
