@@ -73,12 +73,22 @@ router.post("/signin", Validate(SigninUser), async (req, res) => {
 router.get("/me", authenticate, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
-    if (!user) return res.status(404).json({ message: "User not found" });
 
-    res.json({ user });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // ✅ Only log data, don’t accidentally call res.json() twice
+    console.log("Fetched user from /me:", user);
+
+    return res.status(200).json({ user });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Server error" });
+    console.error("Error in /me route:", error);
+
+    // ✅ Send error response only if it hasn't already been sent
+    if (!res.headersSent) {
+      return res.status(500).json({ message: "Server error" });
+    }
   }
 });
 

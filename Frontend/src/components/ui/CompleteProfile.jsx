@@ -16,9 +16,9 @@ function CompleteProfile({ onProfileCompletion }) {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    username: user.username || "",
-    firstName: user.firstName || "",
-    lastName: user.lastName || "",
+    username: user?.username || "",
+    firstName: user?.firstName || "",
+    lastName: user?.lastName || "",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -99,6 +99,13 @@ function CompleteProfile({ onProfileCompletion }) {
       setLoading(false);
     }
   };
+  if (!user) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-gray-500 text-sm">Loading profile...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white py-12 px-4 sm:px-6 lg:px-8">

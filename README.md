@@ -9,7 +9,6 @@ It features Google Authentication, password hashing, input validation using Zod,
 
 - User Authentication
   - Sign up / Login with email-password
-  - Sign in with Google OAuth
 - Create, Read, Update, Delete Todos
 - Passwords securely hashed before storing
 - Validation using Zod middleware
@@ -19,11 +18,11 @@ It features Google Authentication, password hashing, input validation using Zod,
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: React.js, TailwindCSS
+- **Frontend**: React.js, TailwindCSS, Redux
 - **Backend**: Node.js, Express.js
 - **Database**: MongoDB
-- **Authentication**: Google OAuth 2.0, JWT
+- **Authentication**: JWT
 - **Validation**: Zod
-- **Password Hashing**: bcrypt
+- **Password Hashing**: bcryptJS
 
 ---
