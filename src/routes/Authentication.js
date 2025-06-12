@@ -78,14 +78,14 @@ router.get("/me", authenticate, async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // ✅ Only log data, don’t accidentally call res.json() twice
+  
     console.log("Fetched user from /me:", user);
 
     return res.status(200).json({ user });
   } catch (error) {
     console.error("Error in /me route:", error);
 
-    // ✅ Send error response only if it hasn't already been sent
+   
     if (!res.headersSent) {
       return res.status(500).json({ message: "Server error" });
     }
